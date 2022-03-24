@@ -8,8 +8,8 @@ To create the `sample*.fastq.gz` files, run `./download.sh`.
 
 Then create igxplore-testdata:
 
-    mkdir -p igxplore-testdata/{databases/human,reads}
-    for d in V D J; do cp IGH${d}.fasta igxplore-testdata/databases/human/${d}.fasta; done
+    mkdir -p igxplore-testdata/{databases/human/IGH,reads}
+    for d in V D J; do cp IGH${d}.fasta igxplore-testdata/databases/human/IGH/${d}.fasta; done
     cp sample{19,20,24}_{1,2}.fastq.gz igxplore-testdata/reads/
     tar cf igxplore-testdata-1.tar igxplore-testdata/
 

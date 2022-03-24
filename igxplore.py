@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Iterable
+from typing import List, Iterable, Dict
 
 
 class ParseError(Exception):
@@ -35,6 +35,11 @@ class Sample:
     reads: Path
 
 
-def read_samples(path) -> Iterable[Sample]:
-    for row in read_tsv(path, columns=3):
-        yield Sample(name=row[0], database=Path(row[1]), reads=Path(row[2]))
+def read_samples(path) -> Dict[str, Sample]:
+    """
+    Return a dict that maps a sample name to a Sample object
+    """
+    samples = {}
+    for name, database, reads in read_tsv(path, columns=3):
+        samples[name] = Sample(name=name, database=database, reads=reads)
+    return samples
