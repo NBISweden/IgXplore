@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  run:
+    name: Run pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Conda environment
+        run: |
+          conda install -c conda-forge mamba
+          source $CONDA/etc/profile.d/conda.sh
+          mamba env create --quiet -n testenv -f environment.yml
+      - name: Run pipeline
+        run: |
+          source $CONDA/etc/profile.d/conda.sh
+          conda activate testenv
+          ./test.sh
