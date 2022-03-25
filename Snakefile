@@ -8,7 +8,8 @@ for sample in samples.values():
 
 
 rule all:
-    input: expand("{name}/final/filtered.tsv.gz", name=samples.keys())
+    input:
+        expand("{name}/final/clonotypes.tsv", name=samples.keys())
 
 
 rule igdiscover_init:
@@ -31,3 +32,16 @@ rule igdiscover_run:
     shell:
         "cd {wildcards.name}; "
         "igdiscover run final/filtered.tsv.gz"
+
+
+rule igdiscover_clonotypes:
+    output:
+        tsv="{name}/final/clonotypes.tsv",
+        members="{name}/final/clonotype-members.tsv",
+    input: "{name}/final/filtered.tsv.gz"
+    shell:
+        "igdiscover"
+        " clonotypes"
+        " --members={output.members}"
+        " {input}"
+        " > {output.tsv}"
