@@ -22,4 +22,4 @@ ln -s ../igxplore-testdata/reads reads
 ln -s ../igxplore-testdata/databases databases
 
 # Run the pipeline
-snakemake -s ../Snakefile
+snakemake -p -s ../Snakefile "$@"
