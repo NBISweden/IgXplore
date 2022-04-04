@@ -1,0 +1,14 @@
+ensembl-genes.txt
+ensembl.*.fasta
+Homo_sapiens.GRCh38.92.gtf.gz
+Homo_sapiens.GRCh38.dna.primary_assembly.fa
+Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai
+IGH?.fasta
+ncbi-genes.txt
+ncbi.*.fasta
+GCF_000001405.38_GRCh38.p12_genomic.gff.gz
+venv-has-pyfaidx
+.venv/
+sample*.fastq.gz
+igxplore-testdata/
+databases/
