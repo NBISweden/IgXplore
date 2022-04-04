@@ -23,7 +23,11 @@ rule igdiscover_init:
         " --reads1={input.reads}"
         " --database={input.database}"
         " {wildcards.name}; "
-        "igdiscover config --file {wildcards.name}/igdiscover.yaml --set iterations 0"
+        "igdiscover config"
+        " --file {wildcards.name}/igdiscover.yaml"
+        " --set iterations 0"
+        " --set barcode_length_5prime {config[umi_length_5prime]}"
+        " --set barcode_length_3prime {config[umi_length_3prime]}"
 
 
 rule igdiscover_run:
