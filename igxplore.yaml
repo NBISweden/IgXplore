@@ -1,2 +1,14 @@
+# Path to a directory containing V.fasta, D.fasta and J.fasta
 database: "databases/human/IGH"
 
+# If you have a UMI (unique molecular identifier) at the 5' end,
+# set this to its length. Leave at 0 when you have no 5' UMI.
+#
+umi_length_5prime: 0
+
+
+# Same as above, but for the 3' end of the sequence. Leave at 0 when you have no 3' UMI.
+# Currently, you cannot have a UMI in both ends, so at least one of the two settings
+# must be zero.
+#
+umi_length_3prime: 0
