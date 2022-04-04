@@ -1,31 +1,12 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Iterable, Dict
+from typing import Dict
+
+import pandas as pd
 
 
 class ParseError(Exception):
     pass
-
-
-def read_tsv(path, columns: int) -> Iterable[List[str]]:
-    """
-    Read a tab-separated value file from path, allowing "#"-prefixed comments
-
-    Yield a list of fields for every row (ignoring comments and empty lines)
-
-    If the number of fields in a row does not match *columns*, a ParseError
-    is raised.
-    """
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith("#") or not line:
-                continue
-            fields = line.strip().split()
-            if len(fields) != columns:
-                raise ParseError(
-                    f"Expected {columns} tab-separated fields in {path}, but found {len(fields)}")
-            yield fields
 
 
 @dataclass
@@ -40,6 +21,12 @@ def read_samples(path) -> Dict[str, Sample]:
     Return a dict that maps a sample name to a Sample object
     """
     samples = {}
-    for name, database, reads in read_tsv(path, columns=3):
-        samples[name] = Sample(name=name, database=database, reads=reads)
+    table = pd.read_table(path, sep="\t", comment="#")
+    if list(table.columns)[:3] != ["name", "database", "r1"]:
+        raise ParseError(
+            f"The first three columns in {path} must be 'name', 'database' and 'r1'"
+        )
+    for row in table.itertuples():
+        sample = Sample(name=row.name, database=row.database, reads=row.r1)
+        samples[row.name] = sample
     return samples
