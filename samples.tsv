@@ -2,7 +2,7 @@
 # - Sample name
 # - Path to database
 # - Path to R1 file (FASTA or FASTQ, may be compressed)
-
+name	database	r1
 sample19	databases/human/IGH/	sample19_1.fastq.gz
 sample20	databases/human/IGH/	sample20_1.fastq.gz
 sample24	databases/human/IGH/	sample24_1.fastq.gz
