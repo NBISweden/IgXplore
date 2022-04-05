@@ -1,13 +1,55 @@
 ---
-title: "Report"
-output: html_document
+title: "Basic exploratory plots"
+output:
+  html_document:
+      keep_md: true
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = "center",
+                      warning = FALSE,
+                      message = FALSE,
+                      dev = c("png", "pdf"))
+```
 
-# Read from Snakemake input
+## Needed libraries
+```{r libraries, message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+## Read from Snakemake input
 
 Reading clonotypes from "`r snakemake@input`".
 
 ```{r}
 clonotypes <- read.table(snakemake@input[[1]], sep="\t", header=TRUE)
 sprintf("The clonotypes table has %d rows", nrow(clonotypes))
+
+aligned_sequences <- read.table(snakemake@input[[2]], sep="\t", header=TRUE)
+sprintf("The merged aligned tables have %d rows", nrow(aligned_sequences))
+```
+
+## Comparing somatic hypermutation
+
+### Normality distribution
+
+Quantile-quantile plots to evaluate theoretical vs observed quantile data.
+
+```{r norm_test}
+aligned_sequences %>%
+  ggplot(aes(sample = V_SHM, color = sample_id)) +
+  stat_qq() + stat_qq_line() +
+  facet_grid(~sample_id) +
+  theme_classic() +
+  theme(legend.position = "none")
+```
+
+### Comparison of somatic hypermutation between groups
+
+```{r shm_between_groups}
+aligned_sequences %>%
+  ggplot(aes(x = sample_id ,y = V_SHM, color = sample_id)) +
+  geom_violin(draw_quantiles = TRUE, trim = TRUE, na.rm = TRUE) +
+  theme_classic() +
+  theme(legend.position = "none")
 ```

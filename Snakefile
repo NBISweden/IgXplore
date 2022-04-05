@@ -71,5 +71,5 @@ rule merge_clonotype_tables:
 
 rule report:
     output: "report.html"
-    input: "clonotypes.tsv"
+    input: "clonotypes.tsv", "filtered.tsv.gz"
     script: "scripts/report.Rmd"

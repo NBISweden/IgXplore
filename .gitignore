@@ -1,2 +1,5 @@
 testrun/
 igxplore-testdata*
+figure-html/*
+*.html
+*.md
