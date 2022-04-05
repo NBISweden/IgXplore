@@ -7,3 +7,5 @@ dependencies:
   - igdiscover
   - pandas
   - r-rmarkdown
+  - r-dplyr
+  - r-ggplot2
