@@ -1,3 +1,5 @@
+import pandas as pd
+
 from igxplore import read_samples
 
 configfile: "igxplore.yaml"
@@ -9,7 +11,7 @@ for sample in samples.values():
 
 rule all:
     input:
-        expand("{name}/final/clonotypes.tsv", name=samples.keys())
+        "clonotypes.tsv"
 
 
 rule igdiscover_init:
@@ -45,3 +47,17 @@ rule igdiscover_clonotypes:
         " --members={output.members}"
         " {input}"
         " > {output.tsv}"
+
+
+rule merge_tables:
+    output:
+        tsv="clonotypes.tsv"
+    input:
+        expand("{name}/final/clonotypes.tsv", name=samples.keys())
+    run:
+        tables = []
+        for path, name in zip(input, samples):
+            table = pd.read_table(path)
+            table.insert(0, "sample_id", name)
+            tables.append(table)
+        pd.concat(tables).to_csv(output.tsv, index=False, sep="\t")
