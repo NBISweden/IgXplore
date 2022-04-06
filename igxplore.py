@@ -4,6 +4,8 @@ from typing import Dict
 
 import pandas as pd
 
+import pandas as pd
+
 
 class ParseError(Exception):
     pass
@@ -30,3 +32,16 @@ def read_samples(path) -> Dict[str, Sample]:
         sample = Sample(name=row.name, database=row.database, reads=row.r1)
         samples[row.name] = sample
     return samples
+
+
+def merge_tables(input: Iterable[str], output: str, samples: Iterable[str]):
+    """
+    Merge table files given in *input* and write them to *output*.
+    Add a sample_id column.
+    """
+    tables = []
+    for path, name in zip(input, samples):
+        table = pd.read_table(path)
+        table.insert(0, "sample_id", name)
+        tables.append(table)
+    pd.concat(tables).to_csv(output, index=False, sep="\t")
