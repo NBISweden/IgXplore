@@ -9,7 +9,7 @@ for sample in samples.values():
 
 rule all:
     input:
-        "clonotypes.tsv", "filtered.tsv.gz"
+        "report.html", "filtered.tsv.gz"
 
 
 rule igdiscover_init:
@@ -67,3 +67,9 @@ rule merge_clonotype_tables:
         expand("{name}/final/clonotypes.tsv", name=samples.keys())
     run:
         merge_tables(input, output.tsv, samples)
+
+
+rule report:
+    output: "report.html"
+    input: "clonotypes.tsv"
+    script: "scripts/report.Rmd"

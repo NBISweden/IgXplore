@@ -1,0 +1,13 @@
+---
+title: "Report"
+output: html_document
+---
+
+# Read from Snakemake input
+
+Reading clonotypes from "`r snakemake@input`".
+
+```{r}
+clonotypes <- read.table(snakemake@input[[1]], sep="\t", header=TRUE)
+sprintf("The clonotypes table has %d rows", nrow(clonotypes))
+```
