@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Iterable
 
 import pandas as pd
 
