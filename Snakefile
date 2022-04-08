@@ -1,8 +1,8 @@
-from igxplore import read_samples, merge_tables
+from igxplore import read_samples, add_metadata_and_merge_tables
 
 configfile: "igxplore.yaml"
 
-samples = read_samples("samples.tsv")
+samples, metadata = read_samples("samples.tsv")
 for sample in samples.values():
     print(sample)
 
@@ -57,7 +57,7 @@ rule merge_filtered_tables:
     input:
         expand("{name}/final/filtered.tsv.gz", name=samples.keys())
     run:
-        merge_tables(input, output.tsv, samples)
+        add_metadata_and_merge_tables(input, output.tsv, metadata)
 
 
 rule merge_clonotype_tables:
@@ -66,7 +66,7 @@ rule merge_clonotype_tables:
     input:
         expand("{name}/final/clonotypes.tsv", name=samples.keys())
     run:
-        merge_tables(input, output.tsv, samples)
+        add_metadata_and_merge_tables(input, output.tsv, metadata)
 
 
 rule report:
