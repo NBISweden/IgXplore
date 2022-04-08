@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable
-
-import pandas as pd
+from typing import Dict, Iterable, Tuple
 
 import pandas as pd
 
@@ -18,30 +16,35 @@ class Sample:
     reads: Path
 
 
-def read_samples(path) -> Dict[str, Sample]:
+def read_samples(path) -> Tuple[Dict[str, Sample], pd.DataFrame]:
     """
     Return a dict that maps a sample name to a Sample object
     """
     samples = {}
     table = pd.read_table(path, sep="\t", comment="#")
-    if list(table.columns)[:3] != ["name", "database", "r1"]:
+    if list(table.columns)[:3] != ["sample_id", "database", "r1"]:
         raise ParseError(
-            f"The first three columns in {path} must be 'name', 'database' and 'r1'"
+            f"The first three columns in {path} must be 'sample_id', 'database' and 'r1'"
         )
     for row in table.itertuples():
-        sample = Sample(name=row.name, database=row.database, reads=row.r1)
-        samples[row.name] = sample
-    return samples
+        sample = Sample(name=row.sample_id, database=row.database, reads=row.r1)
+        samples[row.sample_id] = sample
+    metadata = table.drop(columns=["database", "r1"])
+    return samples, metadata
 
 
-def merge_tables(input: Iterable[str], output: str, samples: Iterable[str]):
+def add_metadata_and_merge_tables(input: Iterable[str], output: str, metadata: pd.DataFrame):
     """
-    Merge table files given in *input* and write them to *output*.
-    Add a sample_id column.
+    Read table files from the paths in the *input* iterable,
+    augment them with metadata (input file n is augmented with metadata
+    from row n of the *metadata* table),
+    then merge the tables and write them to the *output*.
     """
     tables = []
-    for path, name in zip(input, samples):
+    metadata_column_names = list(metadata.columns)
+    for path, metadata in zip(input, metadata.itertuples(index=False)):
         table = pd.read_table(path)
-        table.insert(0, "sample_id", name)
+        for i, column_name in enumerate(metadata_column_names):
+            table.insert(i, column_name, getattr(metadata, column_name))
         tables.append(table)
     pd.concat(tables).to_csv(output, index=False, sep="\t")
