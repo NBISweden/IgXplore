@@ -16,7 +16,7 @@ class Sample:
     reads: Path
 
 
-def read_samples(path) -> Tuple[Dict[str, Sample], pd.DataFrame]:
+def read_samples(path, default_database) -> Tuple[Dict[str, Sample], pd.DataFrame]:
     """
     Return a dict that maps a sample name to a Sample object
     """
@@ -27,7 +27,8 @@ def read_samples(path) -> Tuple[Dict[str, Sample], pd.DataFrame]:
             f"The first three columns in {path} must be 'sample_id', 'database' and 'r1'"
         )
     for row in table.itertuples():
-        sample = Sample(name=row.sample_id, database=row.database, reads=row.r1)
+        database = default_database if row.database == "." else row.database
+        sample = Sample(name=row.sample_id, database=database, reads=row.r1)
         samples[row.sample_id] = sample
     metadata = table.drop(columns=["database", "r1"])
     return samples, metadata

@@ -2,7 +2,7 @@ from igxplore import read_samples, add_metadata_and_merge_tables
 
 configfile: "igxplore.yaml"
 
-samples, metadata = read_samples("samples.tsv")
+samples, metadata = read_samples("samples.tsv", default_database=config["database"])
 for sample in samples.values():
     print(sample)
 
