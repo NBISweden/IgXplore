@@ -1,10 +1,10 @@
 # Required columns:
 # - Sample id
-# - Path to database
+# - Path to a database or a dot "." to use the database configured in igxplore.yaml
 # - Path to R1 file (FASTA or FASTQ, may be compressed)
 # Additional columns are treated as metadata columns ("timepoint" in this example)
 #
 sample_id	database	r1	timepoint
-sample19	databases/human/IGH/	sample19_1.fastq.gz	6
-sample20	databases/human/IGH/	sample20_1.fastq.gz	12
+sample19	.	sample19_1.fastq.gz	6
+sample20	.	sample20_1.fastq.gz	12
 sample24	databases/human/IGH/	sample24_1.fastq.gz	24
