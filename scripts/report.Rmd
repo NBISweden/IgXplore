@@ -15,6 +15,7 @@ knitr::opts_chunk$set(fig.align = "center",
 ```{r libraries, message=FALSE}
 library(dplyr)
 library(ggplot2)
+library(data.table)
 ```
 
 ## Read from Snakemake input
@@ -22,10 +23,10 @@ library(ggplot2)
 Reading clonotypes from "`r snakemake@input`".
 
 ```{r}
-clonotypes <- read.table(snakemake@input[[1]], sep="\t", header=TRUE)
+clonotypes <- fread(snakemake@input[[1]], sep="\t", header=TRUE)
 sprintf("The clonotypes table has %d rows", nrow(clonotypes))
 
-aligned_sequences <- read.table(snakemake@input[[2]], sep="\t", header=TRUE)
+aligned_sequences <- fread(snakemake@input[[2]], sep="\t", header=TRUE)
 sprintf("The merged aligned tables have %d rows", nrow(aligned_sequences))
 ```
 
