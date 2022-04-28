@@ -23,9 +23,11 @@ library(data.table)
 Reading clonotypes from "`r snakemake@input`".
 
 ```{r}
+# Read clonotype table
 clonotypes <- fread(snakemake@input[[1]], sep="\t", header=TRUE)
 sprintf("The clonotypes table has %d rows", nrow(clonotypes))
 
+# Read merged processed sample table
 aligned_sequences <- fread(snakemake@input[[2]], sep="\t", header=TRUE)
 sprintf("The merged aligned tables have %d rows", nrow(aligned_sequences))
 ```
