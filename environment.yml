@@ -9,3 +9,6 @@ dependencies:
   - r-rmarkdown
   - r-dplyr
   - r-ggplot2
+  - r-data.table
+  - r-r.utils
+  
