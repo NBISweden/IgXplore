@@ -13,6 +13,7 @@ knitr::opts_chunk$set(fig.align = "center",
 
 ## Needed libraries
 ```{r libraries, message=FALSE}
+library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(data.table)
@@ -36,18 +37,19 @@ sprintf("The merged aligned tables have %d rows", nrow(aligned_sequences))
 
 ### Normality distribution
 
-Quantile-quantile plots to evaluate theoretical vs observed quantile data.
+Quantile-quantile plots to evaluate theoretical vs observed quantile data. Normally distributed values should follow the theoretical line, while points diverging from the theoretical line means that the sample does not follow a normal distribution.
 
 ```{r norm_test}
 aligned_sequences %>%
   ggplot(aes(sample = V_SHM, color = sample_id)) +
   stat_qq() + stat_qq_line() +
   facet_grid(~sample_id) +
-  theme_classic() +
-  theme(legend.position = "none")
+  theme_classic()
 ```
 
 ### Comparison of somatic hypermutation between groups
+
+Comparison between percentage of somatic hypermutation (SHM) on the IGHV gene between the studied groups and/or timepoints.
 
 ```{r shm_between_groups}
 aligned_sequences %>%
@@ -55,4 +57,21 @@ aligned_sequences %>%
   geom_violin(draw_quantiles = TRUE, trim = TRUE, na.rm = TRUE) +
   theme_classic() +
   theme(legend.position = "none")
+```
+
+### Comparison of somatic hypermutation across variable gene
+
+Comparison between percentage of somatic hypermutation (SHM) on different regions of IGHV gene, including both the framework regions (FR1-FR3) and the the complementarity-determining regions (CDR1-2). 
+
+```{r shm_location}
+aligned_sequences %>%
+  pivot_longer(cols = c("V_SHM", "FR1_SHM", "CDR1_SHM", "FR2_SHM", "CDR2_SHM", "FR3_SHM" ), names_to = "SHM_location", values_to = "SHM_value") %>%
+  mutate(SHM_location = factor(SHM_location, levels = c("V_SHM", "FR1_SHM", "CDR1_SHM", "FR2_SHM", "CDR2_SHM", "FR3_SHM"))) %>%
+  ggplot(aes(x= SHM_location, y = SHM_value, fill = SHM_location, group = SHM_location)) +
+  geom_violin(trim = TRUE) +
+  labs(x = "", y = "Somatic hypermutation (Log2 %)") +
+  theme_classic() +
+  scale_y_continuous(trans = "log2") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
 ```
