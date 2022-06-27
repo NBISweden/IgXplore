@@ -24,23 +24,24 @@
 
 ## Running the pipeline
 
-1. Create a directory ("run directory") for the new pipeline run and change into it.
-   We call it "myrun" in the following:
+1. Create a directory ("run directory") for the new pipeline run and change
+   into it. We call it "myrun" in the following:
 
        mkdir myrun
        cd myrun
 
-2. Create a directory named `reads/`
+2. Make the paired-end FASTQ files (`.fastq` or `.fastq.gz`) for all samples
+   available in a directory named `reads`, preferably by using symbolic links.
+   If you have a single directory with reads of all samples, you can create a symbolic link to that folder:
+
+       ln -s /path/to/raw/reads reads
+
+   Alternatively, if you need to make files from multiple locations available,
+   create a directory named `reads/` and create a symbolic link for each file:
 
        mkdir reads
+       ln -sr /path/to/raw/reads/*.fastq.gz reads/
 
-3. Make the paired-end FASTQ files (`.fastq` or `.fastq.gz`) for all samples available in the
-   `reads/` directory, preferably by using symbolic links.
-   For example:
-
-       cd reads
-       ln -s /path/to/raw/reads/sample1_R1.fastq.gz .
-       ln -s /path/to/raw/reads/sample1_R2.fastq.gz .
 4. Create a directory for the V/D/J germline database and place the appropriate
    `V.fasta`, `D.fasta`, `J.fasta` files into it.
 
