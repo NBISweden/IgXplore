@@ -1,10 +1,10 @@
-from igxplore import read_samples, add_metadata_and_merge_tables
+from igxplore import read_experiments, add_metadata_and_merge_tables
 
 configfile: "igxplore.yaml"
 
-samples, metadata = read_samples("samples.tsv", default_database=config["database"])
-for sample in samples.values():
-    print(sample)
+experiments, metadata = read_experiments("experiments.tsv", default_database=config["database"])
+for experiment in experiments.values():
+    print(experiment)
 
 
 rule all:
@@ -15,7 +15,7 @@ rule all:
 rule igdiscover_init:
     output: "{name}/igdiscover.yaml"
     input:
-        reads=lambda wildcards: f"reads/{samples[wildcards.name].reads}",
+        reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}",
         database=config["database"]
     shell:
         "rmdir {wildcards.name}; "
@@ -55,7 +55,7 @@ rule merge_filtered_tables:
     output:
         tsv="filtered.tsv.gz"
     input:
-        expand("{name}/final/filtered.tsv.gz", name=samples.keys())
+        expand("{name}/final/filtered.tsv.gz", name=experiments.keys())
     run:
         add_metadata_and_merge_tables(input, output.tsv, metadata)
 
@@ -64,7 +64,7 @@ rule merge_clonotype_tables:
     output:
         tsv="clonotypes.tsv"
     input:
-        expand("{name}/final/clonotypes.tsv", name=samples.keys())
+        expand("{name}/final/clonotypes.tsv", name=experiments.keys())
     run:
         add_metadata_and_merge_tables(input, output.tsv, metadata)
 

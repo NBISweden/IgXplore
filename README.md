@@ -58,7 +58,7 @@
    (Then copy the appropriate V/D/J.fasta files into `databases/mouse1` and `databases/mouse2`.)
 5. Copy the file `igxplore.yaml` into the run directory.
    Open it with a text editor and adjust it (if necessary).
-6. Create a sample sheet file `samples.tsv` within the `myrun/` directory.
+6. Create an `experiments.tsv` table within the `myrun/` directory.
    Use the provided template or write a file from scratch; see the section below.
 7. Finally, run the pipeline using the provided `Snakefile`:
 
@@ -67,31 +67,48 @@
    or use `-j all` to use all available cores.
 
 
-## The sample sheet
+## Terms
 
-The sample sheet `samples.tsv` is a table that lists all samples of a run
-along with their metadata. Example:
+A *run* is a single invocation of IgXplore (through `snakemake -s ...`).
 
-    sample_id  database        r1                   timepoint
-    sample19   .               sample19_1.fastq.gz  6
-    sample20   .               sample20_1.fastq.gz  12
-    sample24   databases/IGH/  sample24_1.fastq.gz  24
+A *sample* is a set of paired-end reads (stored in a two FASTQ files).
+
+A (germline) *database* is a directory with the three files `V.fasta`,
+`D.fasta`, `J.fasta`.
+
+An *experiment* is a sample paired with a database it should be mapped against.
+
+IgXplore can do multiple experiments in each run.
+This allows, for example, to map one sample against multiple V/D/J databases
+within the same run by setting up multiple experiments.
+
+## The experiment table `experiments.tsv`
+
+The `experiments.tsv` file lists the experiments IgXplore should do in a single
+run, along with some metadata. Example:
+
+    id        database        r1                  sample   timepoint
+    sample1   .               sample1_1.fastq.gz  sample1  6
+    sample2   .               sample2_1.fastq.gz  sample2  12
+    sample3   databases/IGH/  sample3_1.fastq.gz  sample3  24
 
 - Any row that starts with `#` is a comment and is ignored.
 - The values cannot contain spaces.
-- Columns *sample_id*, *database* and *r1* are required.
-- *sample_id* is an arbitrary name that must be unique for each sample.
+- Columns *id*, *database* and *r1* are required.
+- *id* is an arbitrary name that must be unique for each experiment.
+  The pipeline creates a separate directory with experiment-specific files,
+  named by id.
 - *database* is the path to the database to use for that sample.
   If you write a dot (`.`), the database that is configured in `igxplore.yaml` is used.
 - *r1* is the name of a FASTQ file within the `reads/` directory.
   This is the name to the file containing R1 reads.
   The name for the second (R2) file is detected automatically.
-- Any extra columns (here: *timepoint*) are taken to be sample-specific metadata and
-  are copied to the final output table.
+- Any extra columns (here: *sample* and *timepoint*) are taken to be
+  sample-specific metadata and are copied to the final output table.
 
 The file can be edited in a text editor or even in a spreadsheet program such
-as LibreOffice Calc (you can run `localc samples.tsv` on the command line to open
-the file in Calc).
+as LibreOffice Calc (you can run `localc samples.tsv` on the command line to
+open the file in Calc).
 
 
 ## Result files
@@ -102,10 +119,10 @@ The pipeline creates the following main result files in the run directory.
 * `clonotypes.tsv`: Merged clonotype tables of all samples.
 * `filtered.tsv.gz`: Merged `filtered.tsv.gz` tables of all samples.
 
-The merged tables contain an additional *sample_id* column and
+The merged tables contain an additional *id* column and
 also all extra metadata columns specified in `samples.tsv`.
 
-Results for individual runs can be found in subdirectories named according to *sample_id*.
+Results for individual runs can be found in subdirectories named according to *id* (experiment id).
 
 
 ## Running the tests (during development)

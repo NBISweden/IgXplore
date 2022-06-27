@@ -10,28 +10,28 @@ class ParseError(Exception):
 
 
 @dataclass
-class Sample:
+class Experiment:
     name: str
     database: Path
     reads: Path
 
 
-def read_samples(path, default_database) -> Tuple[Dict[str, Sample], pd.DataFrame]:
+def read_experiments(path, default_database) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
     """
-    Return a dict that maps a sample name to a Sample object
+    Return a dict that maps an experiment name to an Experiment object
     """
-    samples = {}
+    experiments = {}
     table = pd.read_table(path, sep="\t", comment="#")
-    if list(table.columns)[:3] != ["sample_id", "database", "r1"]:
+    if list(table.columns)[:3] != ["id", "database", "r1"]:
         raise ParseError(
-            f"The first three columns in {path} must be 'sample_id', 'database' and 'r1'"
+            f"The first three columns in {path} must be 'id', 'database' and 'r1'"
         )
     for row in table.itertuples():
         database = default_database if row.database == "." else row.database
-        sample = Sample(name=row.sample_id, database=database, reads=row.r1)
-        samples[row.sample_id] = sample
+        experiment = Experiment(name=row.id, database=database, reads=row.r1)
+        experiments[row.id] = experiment
     metadata = table.drop(columns=["database", "r1"])
-    return samples, metadata
+    return experiments, metadata
 
 
 def add_metadata_and_merge_tables(input: Iterable[str], output: str, metadata: pd.DataFrame):
