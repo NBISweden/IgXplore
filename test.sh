@@ -17,7 +17,7 @@ rm -rf testrun
 mkdir testrun
 cd testrun
 cp ../igxplore.yaml .
-cp ../samples.tsv .
+cp ../experiments.tsv .
 ln -s ../igxplore-testdata/reads reads
 ln -s ../igxplore-testdata/databases databases
 

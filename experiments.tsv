@@ -1,0 +1,16 @@
+# Experiment description table
+#
+# Required columns:
+#
+# - id: An identifier
+# - database: Path to a database directory (with V.fasta, D.fasta and J.fasta)
+#     or a dot "." to use the default database configured in igxplore.yaml
+# - r1: Path to R1 file (FASTA or FASTQ, can be gzip-compressed)
+#
+# Additional columns are treated as metadata columns
+# ("sample" and "timepoint" in this example)
+#
+id	database	r1	sample	timepoint
+sample19	.	sample19_1.fastq.gz	sample19	6
+sample20	.	sample20_1.fastq.gz	sample20	12
+sample24	databases/human/IGH/	sample24_1.fastq.gz	sample24	24

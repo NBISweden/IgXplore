@@ -41,9 +41,9 @@ Quantile-quantile plots to evaluate theoretical vs observed quantile data. Norma
 
 ```{r norm_test}
 aligned_sequences %>%
-  ggplot(aes(sample = V_SHM, color = sample_id)) +
+  ggplot(aes(sample = V_SHM, color = id)) +
   stat_qq() + stat_qq_line() +
-  facet_grid(~sample_id) +
+  facet_grid(~id) +
   theme_classic()
 ```
 
@@ -53,7 +53,7 @@ Comparison between percentage of somatic hypermutation (SHM) on the IGHV gene be
 
 ```{r shm_between_groups}
 aligned_sequences %>%
-  ggplot(aes(x = sample_id ,y = V_SHM, color = sample_id)) +
+  ggplot(aes(x = id ,y = V_SHM, color = id)) +
   geom_violin(draw_quantiles = TRUE, trim = TRUE, na.rm = TRUE) +
   theme_classic() +
   theme(legend.position = "none")
