@@ -2,7 +2,7 @@ from igxplore import read_experiments, add_metadata_and_merge_tables
 
 configfile: "igxplore.yaml"
 
-experiments, metadata = read_experiments("experiments.tsv", default_database=config["database"])
+experiments, metadata = read_experiments("experiments.tsv")
 for experiment in experiments.values():
     print(experiment)
 
