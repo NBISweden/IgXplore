@@ -16,12 +16,14 @@ rule igdiscover_init:
     output: "{name}/igdiscover.yaml"
     input:
         reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}",
-        database=lambda wildcards: f"{experiments[wildcards.name].database}"
+        database=lambda wildcards: expand(f"{experiments[wildcards.name].database}/{{gene}}.fasta", gene=("V", "D", "J"))
+    params:
+        database_dir=lambda wildcards: f"{experiments[wildcards.name].database}"
     shell:
         "rmdir {wildcards.name}; "  # Created by Snakemake
         "igdiscover init"
         " --reads1={input.reads}"
-        " --database={input.database}"
+        " --database={params.database_dir}"
         " {wildcards.name}; "
         "igdiscover config"
         " --file {wildcards.name}/igdiscover.yaml"

@@ -27,7 +27,7 @@ def read_experiments(path) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
             f"The first three columns in {path} must be 'id', 'database' and 'r1'"
         )
     for row in table.itertuples():
-        experiment = Experiment(name=row.id, database=row.database, reads=row.r1)
+        experiment = Experiment(name=row.id, database=row.database.rstrip("/"), reads=row.r1)
         experiments[row.id] = experiment
     metadata = table.drop(columns=["database", "r1"])
     return experiments, metadata
