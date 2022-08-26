@@ -16,7 +16,7 @@ class Experiment:
     reads: Path
 
 
-def read_experiments(path, default_database) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
+def read_experiments(path) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
     """
     Return a dict that maps an experiment name to an Experiment object
     """
@@ -27,14 +27,21 @@ def read_experiments(path, default_database) -> Tuple[Dict[str, Experiment], pd.
             f"The first three columns in {path} must be 'id', 'database' and 'r1'"
         )
     for row in table.itertuples():
-        database = default_database if row.database == "." else row.database
-        experiment = Experiment(name=row.id, database=database, reads=row.r1)
+        experiment = Experiment(
+            name=row.id, database=row.database.rstrip("/"), reads=row.r1
+        )
+        if row.id in experiments:
+            raise ValueError(
+                f"Experiment id {row.id} occurs twice in {path}, but it needs to be unique"
+            )
         experiments[row.id] = experiment
     metadata = table.drop(columns=["database", "r1"])
     return experiments, metadata
 
 
-def add_metadata_and_merge_tables(input: Iterable[str], output: str, metadata: pd.DataFrame):
+def add_metadata_and_merge_tables(
+    input: Iterable[str], output: str, metadata: pd.DataFrame
+):
     """
     Read table files from the paths in the *input* iterable,
     augment them with metadata (input file n is augmented with metadata

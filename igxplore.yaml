@@ -1,7 +1,3 @@
-# Path to a directory containing V.fasta, D.fasta and J.fasta.
-# This can be overriden per sample in samples.tsv.
-database: "databases/human/IGH"
-
 # If you have a UMI (unique molecular identifier) at the 5' end,
 # set this to its length. Leave at 0 when you have no 5' UMI.
 #

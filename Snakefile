@@ -2,7 +2,7 @@ from igxplore import read_experiments, add_metadata_and_merge_tables
 
 configfile: "igxplore.yaml"
 
-experiments, metadata = read_experiments("experiments.tsv", default_database=config["database"])
+experiments, metadata = read_experiments("experiments.tsv")
 for experiment in experiments.values():
     print(experiment)
 
@@ -16,12 +16,14 @@ rule igdiscover_init:
     output: "{name}/igdiscover.yaml"
     input:
         reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}",
-        database=config["database"]
+        database=lambda wildcards: expand(f"{experiments[wildcards.name].database}/{{gene}}.fasta", gene=("V", "D", "J"))
+    params:
+        database_dir=lambda wildcards: f"{experiments[wildcards.name].database}"
     shell:
-        "rmdir {wildcards.name}; "
+        "rmdir {wildcards.name}; "  # Created by Snakemake
         "igdiscover init"
         " --reads1={input.reads}"
-        " --database={input.database}"
+        " --database={params.database_dir}"
         " {wildcards.name}; "
         "igdiscover config"
         " --file {wildcards.name}/igdiscover.yaml"
