@@ -44,6 +44,7 @@ aligned_sequences %>%
   ggplot(aes(sample = V_SHM, color = id)) +
   stat_qq() + stat_qq_line() +
   facet_grid(~id) +
+  scale_color_viridis_d() +
   theme_classic()
 ```
 
@@ -53,9 +54,10 @@ Comparison between percentage of somatic hypermutation (SHM) on the IGHV gene be
 
 ```{r shm_between_groups}
 aligned_sequences %>%
-  ggplot(aes(x = id ,y = V_SHM, color = id)) +
+  ggplot(aes(x = id ,y = V_SHM, fill = id)) +
   geom_violin(draw_quantiles = TRUE, trim = TRUE, na.rm = TRUE) +
   theme_classic() +
+  scale_fill_viridis_d() +
   theme(legend.position = "none")
 ```
 
@@ -72,6 +74,55 @@ aligned_sequences %>%
   labs(x = "", y = "Somatic hypermutation (Log2 %)") +
   theme_classic() +
   scale_y_continuous(trans = "log2") +
+  scale_fill_viridis_d(option = "A") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+```
+
+### Comparison between HCDR3 length
+
+Compare HCDR3 amino acid length using kernel density estimate across different timepoints.
+
+```{r HCDR3_length}
+aligned_sequences %>%
+  mutate(cdr3_aa_len = nchar(cdr3_aa)) %>%
+  ggplot(aes(x = cdr3_aa_len, fill = id)) +
+  geom_density(alpha = .7) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_viridis_d() +
+  labs(y = "Density", x = "HCDR3 aa length") +
+  theme_classic() +
+  facet_wrap(~ timepoint)
+
+```
+
+### HV-HJ gene pairing from clonotypes
+
+Classical V-J pairing heatmap between different timepoints.
+
+```{r vj_pairing, fig.width=11, fig.height=6}
+
+clonotypes %>%
+  mutate(v_call = sub("\\*.*","", v_call),
+         j_call = sub("\\*.*|-.*","", j_call)) %>%
+  ggplot(aes(x= v_call, y = j_call, fill = count)) +
+    geom_tile(color = "black") +
+    scale_fill_viridis_c(option = "viridis", direction = 1) +
+    theme(axis.text.x = element_text(angle = 90, size = 5, hjust = 1, vjust = 0.5, face = "bold", colour = "black"),
+          axis.text.y = element_text(face = "bold", colour = "black"),
+          strip.background = element_rect(color="black", fill="grey90", size=.8, linetype="solid"),
+          strip.text = element_text(face = "bold"),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          legend.position =  "top") +
+    labs(fill = "Clonal size") +
+    facet_grid( ~ timepoint, margins = FALSE, switch = "y")
+
+```
+
+
+## Session Info
+```{r sessionInfo}
+sessionInfo()
 ```
