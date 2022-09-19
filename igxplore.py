@@ -14,6 +14,7 @@ class Experiment:
     name: str
     database: Path
     reads: Path
+    is_paired: bool
 
 
 def read_experiments(path) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
@@ -27,8 +28,9 @@ def read_experiments(path) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
             f"The first three columns in {path} must be 'id', 'database' and 'reads'"
         )
     for row in table.itertuples():
+        is_paired = "?" in row.reads
         experiment = Experiment(
-            name=row.id, database=row.database.rstrip("/"), reads=row.reads
+            name=row.id, database=row.database.rstrip("/"), reads=row.reads, is_paired=is_paired
         )
         if row.id in experiments:
             raise ValueError(

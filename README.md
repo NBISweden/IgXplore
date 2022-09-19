@@ -97,10 +97,12 @@ run, along with some metadata. Example:
 - Columns *id*, *database* and *reads* are required.
 - *id* is a unique name that identifies the experiment.
 - *database* is the path to the database to use for that experiment.
-- The *reads* column specifies the names of paired-end FASTQ files
-  relative to the `reads/` directory (that is, omit the `reads/` prefix here).
-  The name must contain the character `?`, which is replaced by `1` and `2` to
-  determine the actual R1 and R2 file names.
+- The *reads* column specifies the path to the input file(s) relative to the `reads/`
+  directory (that is, do not write the `reads/` prefix here).
+  For paired-end reads, use the `?` character in the file name, which will be replaced
+  by `1` and `2` to determine the actual R1 and R2 file names. If there is no `?`
+  character, the data is assumed to be single end. Both FASTA and FASTQ files are accepted;
+  and files may optionally be gzip compressed.
 - Any extra columns (here: *sample* and *timepoint*) are taken to be
   sample-specific metadata and are copied to the final output table.
 
