@@ -87,20 +87,20 @@ within the same run by setting up multiple experiments.
 The `experiments.tsv` file lists the experiments IgXplore should do in a single
 run, along with some metadata. Example:
 
-    id        database        r1                  sample   timepoint
+    id        database        reads               sample   timepoint
     sample1   .               sample1_1.fastq.gz  sample1  6
     sample2   .               sample2_1.fastq.gz  sample2  12
     sample3   databases/IGH/  sample3_1.fastq.gz  sample3  24
 
 - Any row that starts with `#` is a comment and is ignored.
 - The values cannot contain spaces.
-- Columns *id*, *database* and *r1* are required.
+- Columns *id*, *database* and *reads* are required.
 - *id* is an arbitrary name that must be unique for each experiment.
   The pipeline creates a separate directory with experiment-specific files,
   named by id.
 - *database* is the path to the database to use for that sample.
   If you write a dot (`.`), the database that is configured in `igxplore.yaml` is used.
-- *r1* is the name of a FASTQ file within the `reads/` directory.
+- *reads* is the name of a FASTQ file within the `reads/` directory.
   This is the path to the file containing R1 reads.
   The name of the R2 file is detected automatically.
 - Any extra columns (here: *sample* and *timepoint*) are taken to be

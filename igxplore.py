@@ -22,20 +22,20 @@ def read_experiments(path) -> Tuple[Dict[str, Experiment], pd.DataFrame]:
     """
     experiments = {}
     table = pd.read_table(path, sep="\t", comment="#")
-    if list(table.columns)[:3] != ["id", "database", "r1"]:
+    if list(table.columns)[:3] != ["id", "database", "reads"]:
         raise ParseError(
-            f"The first three columns in {path} must be 'id', 'database' and 'r1'"
+            f"The first three columns in {path} must be 'id', 'database' and 'reads'"
         )
     for row in table.itertuples():
         experiment = Experiment(
-            name=row.id, database=row.database.rstrip("/"), reads=row.r1
+            name=row.id, database=row.database.rstrip("/"), reads=row.reads
         )
         if row.id in experiments:
             raise ValueError(
                 f"Experiment id {row.id} occurs twice in {path}, but it needs to be unique"
             )
         experiments[row.id] = experiment
-    metadata = table.drop(columns=["database", "r1"])
+    metadata = table.drop(columns=["database", "reads"])
     return experiments, metadata
 
 

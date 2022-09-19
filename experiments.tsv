@@ -9,7 +9,7 @@
 # Additional columns are treated as metadata columns
 # ("sample" and "timepoint" in this example)
 #
-id	database	r1	sample	timepoint
+id	database	reads	sample	timepoint
 sample19	databases/human/IGH/	sample19_1.fastq.gz	sample19	6
 sample20	databases/human/IGH/	sample20_1.fastq.gz	sample20	12
 sample24	databases/human/IGH/	sample24_1.fastq.gz	sample24	24
