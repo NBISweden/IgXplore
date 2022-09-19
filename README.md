@@ -42,7 +42,7 @@
        mkdir reads
        ln -sr /path/to/raw/reads/*.fastq.gz reads/
 
-4. Create a directory for the V/D/J germline database and place the appropriate
+3. Create a directory for the V/D/J germline database and place the appropriate
    `V.fasta`, `D.fasta`, `J.fasta` files into it.
 
        mkdir database
@@ -55,12 +55,12 @@
        mkdir databases
        mkdir databases/mouse1
        mkdir databases/mouse2
-   (Then copy the appropriate V/D/J.fasta files into `databases/mouse1` and `databases/mouse2`.)
-5. Copy the file `igxplore.yaml` into the run directory.
-   Open it with a text editor and adjust it (if necessary).
-6. Create an `experiments.tsv` table within the `myrun/` directory.
+   Then copy the appropriate V/D/J.fasta files into `databases/mouse1` and `databases/mouse2`.
+4. Copy the file `igxplore.yaml` into the run directory.
+   Open it with a text editor and adjust it if necessary.
+5. Create an `experiments.tsv` table within the `myrun/` directory.
    Use the provided template or write a file from scratch; see the section below.
-7. Finally, run the pipeline using the provided `Snakefile`:
+6. Finally, run the pipeline using the provided `Snakefile`:
 
        snakemake -p -j8 -s ../path/to/Snakefile
    Adjust the value 8 according to how many CPU cores you want to use,
@@ -101,13 +101,13 @@ run, along with some metadata. Example:
 - *database* is the path to the database to use for that sample.
   If you write a dot (`.`), the database that is configured in `igxplore.yaml` is used.
 - *r1* is the name of a FASTQ file within the `reads/` directory.
-  This is the name to the file containing R1 reads.
-  The name for the second (R2) file is detected automatically.
+  This is the path to the file containing R1 reads.
+  The name of the R2 file is detected automatically.
 - Any extra columns (here: *sample* and *timepoint*) are taken to be
   sample-specific metadata and are copied to the final output table.
 
 The file can be edited in a text editor or even in a spreadsheet program such
-as LibreOffice Calc (you can run `localc samples.tsv` on the command line to
+as LibreOffice Calc (you can run `localc experiments.tsv` on the command line to
 open the file in Calc).
 
 
@@ -115,12 +115,12 @@ open the file in Calc).
 
 The pipeline creates the following main result files in the run directory.
 
-* `report.html`: Report in HTML format. Open this in a browser.
+* `report.html`: The report in HTML format. Open this in a browser.
 * `clonotypes.tsv`: Merged clonotype tables of all samples.
 * `filtered.tsv.gz`: Merged `filtered.tsv.gz` tables of all samples.
 
 The merged tables contain an additional *id* column and
-also all extra metadata columns specified in `samples.tsv`.
+also all extra metadata columns specified in `experiments.tsv`.
 
 Results for individual runs can be found in subdirectories named according to *id* (experiment id).
 
