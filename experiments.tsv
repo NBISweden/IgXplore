@@ -10,6 +10,6 @@
 # ("sample" and "timepoint" in this example)
 #
 id	database	reads	sample	timepoint
-sample19	databases/human/IGH/	sample19_1.fastq.gz	sample19	6
-sample20	databases/human/IGH/	sample20_1.fastq.gz	sample20	12
-sample24	databases/human/IGH/	sample24_1.fastq.gz	sample24	24
+sample19	databases/human/IGH/	sample19_?.fastq.gz	sample19	6
+sample20	databases/human/IGH/	sample20_?.fastq.gz	sample20	12
+sample24	databases/human/IGH/	sample24_?.fastq.gz	sample24	24
