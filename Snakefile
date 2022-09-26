@@ -15,14 +15,16 @@ rule all:
 rule igdiscover_init:
     output: "{name}/igdiscover.yaml"
     input:
-        reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}",
+        reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}".replace("?", "1"),
+        reads2=lambda wildcards: f"reads/{experiments[wildcards.name].reads}".replace("?", "2") if experiments[wildcards.name].is_paired else [],
         database=lambda wildcards: expand(f"{experiments[wildcards.name].database}/{{gene}}.fasta", gene=("V", "D", "J"))
     params:
-        database_dir=lambda wildcards: f"{experiments[wildcards.name].database}"
+        database_dir=lambda wildcards: f"{experiments[wildcards.name].database}",
+        reads_arg=lambda wildcards: f"reads1" if experiments[wildcards.name].is_paired else "single-reads"
     shell:
         "rmdir {wildcards.name}; "  # Created by Snakemake
         "igdiscover init"
-        " --reads1={input.reads}"
+        " --{params.reads_arg}={input.reads}"
         " --database={params.database_dir}"
         " {wildcards.name}; "
         "igdiscover config"

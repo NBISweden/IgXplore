@@ -87,22 +87,22 @@ within the same run by setting up multiple experiments.
 The `experiments.tsv` file lists the experiments IgXplore should do in a single
 run, along with some metadata. Example:
 
-    id        database        r1                  sample   timepoint
-    sample1   .               sample1_1.fastq.gz  sample1  6
-    sample2   .               sample2_1.fastq.gz  sample2  12
-    sample3   databases/IGH/  sample3_1.fastq.gz  sample3  24
+    id        database        reads               sample   timepoint
+    sample1   databases/IGH/  sample1_?.fastq.gz  sample1  6
+    sample2   databases/IGH/  sample2_?.fastq.gz  sample2  12
+    sample3   databases/IGH/  sample3_?.fastq.gz  sample3  24
 
 - Any row that starts with `#` is a comment and is ignored.
 - The values cannot contain spaces.
-- Columns *id*, *database* and *r1* are required.
-- *id* is an arbitrary name that must be unique for each experiment.
-  The pipeline creates a separate directory with experiment-specific files,
-  named by id.
-- *database* is the path to the database to use for that sample.
-  If you write a dot (`.`), the database that is configured in `igxplore.yaml` is used.
-- *r1* is the name of a FASTQ file within the `reads/` directory.
-  This is the path to the file containing R1 reads.
-  The name of the R2 file is detected automatically.
+- Columns *id*, *database* and *reads* are required.
+- *id* is a unique name that identifies the experiment.
+- *database* is the path to the database to use for that experiment.
+- The *reads* column specifies the path to the input file(s) relative to the `reads/`
+  directory (that is, do not write the `reads/` prefix here).
+  For paired-end reads, use the `?` character in the file name, which will be replaced
+  by `1` and `2` to determine the actual R1 and R2 file names. If there is no `?`
+  character, the data is assumed to be single end. Both FASTA and FASTQ files are accepted;
+  and files may optionally be gzip compressed.
 - Any extra columns (here: *sample* and *timepoint*) are taken to be
   sample-specific metadata and are copied to the final output table.
 
@@ -122,7 +122,8 @@ The pipeline creates the following main result files in the run directory.
 The merged tables contain an additional *id* column and
 also all extra metadata columns specified in `experiments.tsv`.
 
-Results for individual runs can be found in subdirectories named according to *id* (experiment id).
+Results for individual experiments can be found in subdirectories named
+according to the experiment id (column *id* in the `experiments.tsv` table).
 
 
 ## Running the tests (during development)

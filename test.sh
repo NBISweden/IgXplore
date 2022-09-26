@@ -12,6 +12,14 @@ fi
 rm -rf igxplore-testdata
 tar xf igxplore-testdata-${version}.tar
 
+# Merge paired-end dataset into single ends
+single_end_fasta=igxplore-testdata/reads/sample19premerged.fasta
+if ! [[ -f ${single_end_fasta} ]]; then
+  igdiscover merge igxplore-testdata/reads/sample19_{1,2}.fastq.gz ${single_end_fasta}.fastq.gz
+  cutadapt --quiet -o ${single_end_fasta} ${single_end_fasta}.fastq.gz
+  rm ${single_end_fasta}.fastq.gz
+fi
+
 # Initialize pipeline directory
 rm -rf testrun
 mkdir testrun

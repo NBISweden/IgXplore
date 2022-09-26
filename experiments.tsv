@@ -4,12 +4,15 @@
 #
 # - id: An identifier
 # - database: Path to a directory that contains V.fasta, D.fasta and J.fasta
-# - r1: Path to R1 file (FASTA or FASTQ, can be gzip-compressed)
+# - reads: Path to single-end or paired-end FASTA or FASTQ files (can be gzip-compressed)
+#   For paired-end data, put a '?' into the file name. It will be replaced
+#   with '1' and '2' to generate the actual R1 and R2 file names.
 #
 # Additional columns are treated as metadata columns
 # ("sample" and "timepoint" in this example)
 #
-id	database	r1	sample	timepoint
-sample19	databases/human/IGH/	sample19_1.fastq.gz	sample19	6
-sample20	databases/human/IGH/	sample20_1.fastq.gz	sample20	12
-sample24	databases/human/IGH/	sample24_1.fastq.gz	sample24	24
+id	database	reads	sample	timepoint
+sample19	databases/human/IGH/	sample19_?.fastq.gz	sample19	6
+sample20	databases/human/IGH/	sample20_?.fastq.gz	sample20	12
+sample24	databases/human/IGH/	sample24_?.fastq.gz	sample24	24
+sample19b	databases/human/IGH/	sample19premerged.fasta	sample19b	48
