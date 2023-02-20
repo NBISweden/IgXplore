@@ -12,3 +12,5 @@ dependencies:
   - r-data.table
   - r-r.utils
   - r-tidyr
+  - pip:
+    - 'git+https://github.com/NBISweden/IgDiscover.git@clonoquery2'
