@@ -45,12 +45,12 @@ rule igdiscover_run:
 rule igdiscover_clonotypes:
     output:
         tsv="{name}/final/clonotypes.tsv",
-        members="{name}/final/clonotype-members.tsv",
+        clustered="{name}/final/clustered.tsv",
     input: "{name}/final/filtered.tsv.gz"
     shell:
         "igdiscover"
         " clonotypes"
-        " --members={output.members}"
+        " --clustered={output.clustered}"
         " {input}"
         " > {output.tsv}"
 
