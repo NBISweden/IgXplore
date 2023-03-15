@@ -6,6 +6,7 @@ dependencies:
   - python
   - igdiscover
   - pandas
+  - pip
   - r-rmarkdown
   - r-dplyr
   - r-ggplot2
