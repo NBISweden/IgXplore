@@ -7,6 +7,9 @@ for experiment in experiments.values():
     print(experiment)
 
 
+localrules: all, igdiscover_init
+
+
 rule all:
     input:
         "report.html", "filtered.tsv.gz"
