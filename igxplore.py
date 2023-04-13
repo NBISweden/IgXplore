@@ -1,8 +1,9 @@
+import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
 from xopen import xopen
-
 import pandas as pd
 
 
@@ -48,13 +49,14 @@ def add_metadata_and_merge_tables(
     """
     Read table files from the paths in the *input* iterable,
     augment them with metadata (input file n is augmented with metadata
-    from row n of the *metadata* table),
-    then merge the tables and write them to the *output*.
+    from row n of the *metadata* table) and write a merged table to
+    *output*.
     """
     metadata_column_names = list(metadata.columns)
     header = True
     with xopen(output + ".tmp", mode="w") as f:
         for path, metadata in zip(input, metadata.itertuples(index=False)):
+            print("Processing", path, file=sys.stderr)
             table = pd.read_table(path)
             for i, column_name in enumerate(metadata_column_names):
                 table.insert(i, column_name, getattr(metadata, column_name))
