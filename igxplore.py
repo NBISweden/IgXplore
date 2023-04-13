@@ -54,7 +54,8 @@ def add_metadata_and_merge_tables(
     """
     metadata_column_names = list(metadata.columns)
     header = True
-    with xopen(output + ".tmp", mode="w") as f:
+    tmp_path = "tmp-merge-" + output
+    with xopen(tmp_path, mode="w", compresslevel=3) as f:
         for path, metadata in zip(input, metadata.itertuples(index=False)):
             print("Processing", path, file=sys.stderr)
             table = pd.read_table(path)
@@ -62,4 +63,4 @@ def add_metadata_and_merge_tables(
                 table.insert(i, column_name, getattr(metadata, column_name))
             f.write(table.to_csv(header=header, index=False, sep="\t"))
             header = False
-    os.rename(output + ".tmp", output)
+    os.rename(tmp_path, output)
