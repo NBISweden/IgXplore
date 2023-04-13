@@ -1,8 +1,9 @@
-from igxplore import read_experiments, add_metadata_and_merge_tables
+from igxplore import read_experiments, add_metadata_and_merge_tables, fail_if_databases_inconsistent
 
 configfile: "igxplore.yaml"
 
 experiments, metadata = read_experiments("experiments.tsv")
+
 for experiment in experiments.values():
     print(experiment)
 
@@ -14,13 +15,26 @@ rule all:
     input:
         "report.html", "filtered.tsv.gz"
 
+rule all_databases_consistent:
+    output: "databases.ok"
+    input: expand("databases.{gene}.ok", gene=("V", "D", "J"))
+    shell: "touch {output}"
+
+
+rule database_consistent:
+    output: "databases.{gene}.ok"
+    run:
+        fail_if_databases_inconsistent(experiments.values(), gene=wildcards.gene)
+        shell("touch {output}")
+
 
 rule igdiscover_init:
     output: "{name}/igdiscover.yaml"
     input:
         reads=lambda wildcards: f"reads/{experiments[wildcards.name].reads}".replace("?", "1"),
         reads2=lambda wildcards: f"reads/{experiments[wildcards.name].reads}".replace("?", "2") if experiments[wildcards.name].is_paired else [],
-        database=lambda wildcards: expand(f"{experiments[wildcards.name].database}/{{gene}}.fasta", gene=("V", "D", "J"))
+        database=lambda wildcards: expand(f"{experiments[wildcards.name].database}/{{gene}}.fasta", gene=("V", "D", "J")),
+        all_databases_ok="databases.ok"
     params:
         database_dir=lambda wildcards: f"{experiments[wildcards.name].database}",
         reads_arg=lambda wildcards: f"reads1" if experiments[wildcards.name].is_paired else "single-reads"
