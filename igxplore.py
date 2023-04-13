@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, Tuple
+from xopen import xopen
 
 import pandas as pd
 
@@ -50,11 +51,12 @@ def add_metadata_and_merge_tables(
     from row n of the *metadata* table),
     then merge the tables and write them to the *output*.
     """
-    tables = []
     metadata_column_names = list(metadata.columns)
-    for path, metadata in zip(input, metadata.itertuples(index=False)):
-        table = pd.read_table(path)
-        for i, column_name in enumerate(metadata_column_names):
-            table.insert(i, column_name, getattr(metadata, column_name))
-        tables.append(table)
-    pd.concat(tables).to_csv(output, index=False, sep="\t")
+    header = True
+    with xopen(output, mode="w") as f:
+        for path, metadata in zip(input, metadata.itertuples(index=False)):
+            table = pd.read_table(path)
+            for i, column_name in enumerate(metadata_column_names):
+                table.insert(i, column_name, getattr(metadata, column_name))
+            f.write(table.to_csv(header=header, index=False, sep="\t"))
+            header = False
