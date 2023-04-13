@@ -53,10 +53,11 @@ def add_metadata_and_merge_tables(
     """
     metadata_column_names = list(metadata.columns)
     header = True
-    with xopen(output, mode="w") as f:
+    with xopen(output + ".tmp", mode="w") as f:
         for path, metadata in zip(input, metadata.itertuples(index=False)):
             table = pd.read_table(path)
             for i, column_name in enumerate(metadata_column_names):
                 table.insert(i, column_name, getattr(metadata, column_name))
             f.write(table.to_csv(header=header, index=False, sep="\t"))
             header = False
+    os.rename(output + ".tmp", output)
