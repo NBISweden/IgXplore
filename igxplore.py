@@ -71,6 +71,8 @@ def add_metadata_and_merge_tables(
 def fail_if_databases_inconsistent(experiments: Iterable[Experiment], gene: str):
     db = {}
     sequences = {}
+    inconsistent_message = "Databases use inconsistent nomenclature. "\
+                        "Please fix the problems below and re-run IgXplore"
     error = False
     database_paths = set(experiment.database for experiment in experiments)
     for db_path in database_paths:
@@ -79,8 +81,10 @@ def fail_if_databases_inconsistent(experiments: Iterable[Experiment], gene: str)
             if record_id not in db:
                 db[record_id] = (sequence, path)
             elif db[record_id][0] != sequence:
+                if not error:
+                    print(inconsistent_message, file=sys.stderr)
                 print(
-                    f"Databases inconsistent: A record with id '{record_id}' exists "
+                    f"- Record with name '{record_id}' exists "
                     f"in both '{path}' and '{db[record_id][1]}', but the "
                     "sequences are different", file=sys.stderr
                 )
@@ -89,10 +93,13 @@ def fail_if_databases_inconsistent(experiments: Iterable[Experiment], gene: str)
             if sequence not in sequences:
                 sequences[sequence] = (record_id, path)
             elif sequences[sequence][0] != record_id:
+                if not error:
+                    print(inconsistent_message, file=sys.stderr)
                 print(
-                    f"Databases inconsistent: Record '{record_id}' in '{path}' "
-                    f"has the same sequence as record '{sequences[sequence][0]}' in "
-                    f"'{sequences[sequence][1]}' (they must have the same name)",
+                    f"- Record '{record_id}' in '{path}' and "
+                    f"record '{sequences[sequence][0]}' in "
+                    f"'{sequences[sequence][1]}' contain the same sequence, but "
+                    "different names",
                     file=sys.stderr
                 )
                 error = True
