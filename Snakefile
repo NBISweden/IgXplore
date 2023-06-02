@@ -39,7 +39,7 @@ rule igdiscover_init:
         database_dir=lambda wildcards: f"{experiments[wildcards.name].database}",
         reads_arg=lambda wildcards: f"reads1" if experiments[wildcards.name].is_paired else "single-reads"
     shell:
-        "rmdir {wildcards.name}; "  # Created by Snakemake
+        "rm -r {wildcards.name}; "
         "igdiscover init"
         " --{params.reads_arg}={input.reads}"
         " --database={params.database_dir}"
