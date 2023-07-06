@@ -25,11 +25,11 @@ Reading clonotypes from "`r snakemake@input`".
 
 ```{r}
 # Read clonotype table
-clonotypes <- fread(snakemake@input[[1]], sep="\t", header=TRUE)
+clonotypes <- fread(snakemake@input[[1]], sep="\t", header=TRUE, select = c("V_SHM", "id", "FR1_SHM", "CDR1_SHM", "FR2_SHM", "CDR2_SHM", "FR3_SHM", "cdr3_aa", "v_call", "j_call", "count"))
 sprintf("The clonotypes table has %d rows", nrow(clonotypes))
 
 # Read merged processed sample table
-aligned_sequences <- fread(snakemake@input[[2]], sep="\t", header=TRUE)
+aligned_sequences <- fread(snakemake@input[[2]], sep="\t", header=TRUE, select = c("V_SHM", "id", "FR1_SHM", "CDR1_SHM", "FR2_SHM", "CDR2_SHM", "FR3_SHM", "cdr3_aa", "v_call", "j_call", "count"))
 sprintf("The merged aligned tables have %d rows", nrow(aligned_sequences))
 ```
 
