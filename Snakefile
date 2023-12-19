@@ -64,9 +64,9 @@ rule igdiscover_clonotypes:
         tsv="{name}/final/clonotypes.tsv",
         clustered="{name}/final/clustered.tsv",
     input: "{name}/final/filtered.tsv.gz"
+    params: script=Path(workflow.basedir) / "igdclonotypes.py"
     shell:
-        "igdiscover"
-        " clonotypes"
+        "python3 {params.script}"
         " --clustered={output.clustered}"
         " {input}"
         " > {output.tsv}"
