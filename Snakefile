@@ -61,14 +61,15 @@ rule igdiscover_run:
 
 rule igdiscover_clonotypes:
     output:
-        tsv="{name}/final/clonotypes.tsv",
-        clustered="{name}/final/clustered.tsv",
+        tsv="{name}/final/clonotypes.tsv.gz",
+        clustered="{name}/final/clustered.tsv.gz",
     input: "{name}/final/filtered.tsv.gz"
     params: script=Path(workflow.basedir) / "igdclonotypes.py"
     shell:
         "python3 {params.script}"
         " --clustered={output.clustered}"
         " {input}"
+        " | igzip"
         " > {output.tsv}"
 
 
@@ -83,14 +84,14 @@ rule merge_filtered_tables:
 
 rule merge_clonotype_tables:
     output:
-        tsv="clonotypes.tsv"
+        tsv="clonotypes.tsv.gz"
     input:
-        expand("{name}/final/clonotypes.tsv", name=experiments.keys())
+        expand("{name}/final/clonotypes.tsv.gz", name=experiments.keys())
     run:
         add_metadata_and_merge_tables(input, output.tsv, metadata)
 
 
 rule report:
     output: "report.html"
-    input: "clonotypes.tsv", "filtered.tsv.gz"
+    input: "clonotypes.tsv.gz", "filtered.tsv.gz"
     script: "scripts/report.Rmd"
