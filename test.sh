@@ -30,4 +30,4 @@ ln -s ../igxplore-testdata/reads reads
 ln -s ../igxplore-testdata/databases databases
 
 # Run the pipeline
-snakemake -p -s ../Snakefile "$@"
+snakemake -p --cores=all -s ../Snakefile "$@"
