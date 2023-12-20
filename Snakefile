@@ -8,7 +8,7 @@ for experiment in experiments.values():
     print(experiment)
 
 
-localrules: all, igdiscover_init
+localrules: all, igdiscover_init, database_consistent, all_databases_consistent
 
 
 rule all:
