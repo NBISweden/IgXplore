@@ -54,17 +54,30 @@ def add_metadata_and_merge_tables(
     from row n of the *metadata* table) and write a merged table to
     *output*.
     """
-    metadata_column_names = list(metadata.columns)
-    header = True
+    prev_header = None
     tmp_path = "tmp-merge-" + output
     with xopen(tmp_path, mode="w", compresslevel=3) as f:
-        for path, metadata in zip(input, metadata.itertuples(index=False)):
+        for path, metadata_row in zip(input, metadata.itertuples(index=False)):
             print("Processing", path, file=sys.stderr)
-            table = pd.read_table(path)
-            for i, column_name in enumerate(metadata_column_names):
-                table.insert(i, column_name, getattr(metadata, column_name))
-            f.write(table.to_csv(header=header, index=False, sep="\t"))
-            header = False
+            # Read first 100 rows with Pandas to catch any obvious formatting
+            # problems
+            _ = pd.read_table(path, nrows=100)
+
+            prefix = "\t".join(str(m) for m in metadata_row)
+            with xopen(path) as infile:
+                input_header = infile.readline()
+                if prev_header:
+                    if prev_header != input_header:
+                        raise ValueError("Headers different")
+                else:
+                    header_prefix = metadata[:0].to_csv(index=False, sep="\t").rstrip("\n")
+                    f.write(header_prefix + "\t")
+                    f.write(input_header)
+                    prev_header = input_header
+
+                for line in infile:
+                    print(prefix, line, file=f, sep="\t", end="")
+
     os.rename(tmp_path, output)
 
 
