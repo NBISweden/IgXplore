@@ -67,6 +67,8 @@ rule igdiscover_clonotypes:
     params: script=Path(workflow.basedir) / "igdclonotypes.py"
     shell:
         "python3 {params.script}"
+        " --mismatches=0.8"
+        " --aa"
         " --clustered={output.clustered}"
         " {input}"
         " | igzip"
