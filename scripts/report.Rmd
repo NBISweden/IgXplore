@@ -106,7 +106,7 @@ Classical V-J pairing heatmap between different timepoints.
 clonotypes %>%
   mutate(v_call = sub("\\*.*","", v_call),
          j_call = sub("\\*.*|-.*","", j_call)) %>%
-  ggplot(aes(x= v_call, y = j_call, fill = count)) +
+  ggplot(aes(x= v_call, y = j_call, fill = clone_size)) +
     geom_tile(color = "black") +
     scale_fill_viridis_c(option = "viridis", direction = 1) +
     theme(axis.text.x = element_text(angle = 90, size = 5, hjust = 1, vjust = 0.5, face = "bold", colour = "black"),

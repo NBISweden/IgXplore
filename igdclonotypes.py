@@ -198,7 +198,8 @@ def run_clonotypes(
     columns = list(table.columns)
     columns.remove("barcode")
     columns.remove("count")
-    columns.insert(0, "count")
+    columns.insert(0, "umi_count")
+    columns.insert(0, "clone_size")
     print(*columns, sep="\t")
     members_header = True
     cdr3_column = "cdr3_aa" if aa else "cdr3"
@@ -365,11 +366,10 @@ def is_similar_with_junction(s, t, mismatches, cdr3_core):
 def representative(table):
     """
     Given a table with members of the same clonotype, return a representative
-    as a dict.
     """
     n = len(table)
     if n == 1:
-        return table.iloc[0]
+        result = table.iloc[0].copy()
     elif n == 2:
         result = table.iloc[0].copy()
     else:
@@ -378,7 +378,8 @@ def representative(table):
             c[row.VDJ_nt] += row.count
         most_common_vdj_nt = c.most_common(1)[0][0]
         result = table[table["VDJ_nt"] == most_common_vdj_nt].iloc[0]
-    result.at["count"] = table["count"].sum()
+    result.at["umi_count"] = table["count"].sum()
+    result.at["clone_size"] = len(table)
     return result
 
 
