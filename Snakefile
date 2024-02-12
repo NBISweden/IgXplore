@@ -72,7 +72,8 @@ rule igdiscover_clonotypes:
         " --clustered={output.clustered}"
         " {input}"
         " | igzip"
-        " > {output.tsv}"
+        " > {output.tsv}.tmp.gz"
+        " && mv {output.tsv}.tmp.gz {output.tsv}"
 
 
 rule merge_filtered_tables:
