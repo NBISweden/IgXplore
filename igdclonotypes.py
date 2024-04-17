@@ -82,6 +82,7 @@ logger = logging.getLogger(__name__)
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = ArgumentParser()
     arg = parser.add_argument
     arg(
