@@ -2,10 +2,11 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python
+  - python=3.9
   - igdiscover==0.15.1
   - pandas
   - pip
+  - snakemake-minimal=5.10.0
   - r-rmarkdown
   - r-dplyr
   - r-ggplot2
